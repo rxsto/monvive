@@ -1,0 +1,3 @@
+class Bow extends Weapon {
+  
+}

@@ -1,0 +1,3 @@
+class Bomb extends Weapon {
+  
+}
