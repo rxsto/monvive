@@ -7,7 +7,7 @@ class Main {
   ArrayList<Obstacle> obstacles = new ArrayList();
 
   // Initialize images
-  PImage exit = loadImage("exit2.png");
+  PImage exitButton = loadImage("exitButton2.png");
   PImage cursor = loadImage("crosshair4.png");
   PImage player = loadImage("player_base.png");
 
@@ -50,8 +50,8 @@ class Main {
     fill(255, 255, 255);
     rect(width/2, height/2, 1280, 720);
 
-    // Set position of exit button
-    image(exit, width - exit.width + 16, 48);
+    // Set position of exitButton button
+    image(exitButton, width - exitButton.width + 16, 48);
 
     // Set position of player
     image(player, width/2, height/2);
@@ -62,9 +62,9 @@ class Main {
       image(obstacle.image, obstacle.positionX, obstacle.positionY);
     }
 
-    // when exit is pressed close application
+    // when exitButton is pressed close application
     if (mousePressed) {
-      if (mouseX < width - exit.width/4 && mouseX > width - exit.width - 16 && mouseY < exit.height + 16 && mouseY > exit.height - 48)
+      if (mouseX < width - exitButton.width/4 && mouseX > width - exitButton.width - 16 && mouseY < exitButton.height + 16 && mouseY > exitButton.height - 48)
       {
         exit();
       }
