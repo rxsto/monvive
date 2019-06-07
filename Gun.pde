@@ -1,3 +1,2 @@
 class Gun extends Weapon {
-  
 }

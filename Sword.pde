@@ -1,3 +1,2 @@
 class Sword extends Weapon {
-  
 }

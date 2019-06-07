@@ -1,3 +1,2 @@
 class Bow extends Weapon {
-  
 }

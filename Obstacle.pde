@@ -1,4 +1,4 @@
 class Obstacle extends Display {
-  
-  PImage image = loadImage("obstacle.png");  
+
+  PImage image = loadImage("obstacle.png");
 }

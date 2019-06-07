@@ -1,6 +1,4 @@
-class World extends Display
-{
+class World extends Display {
   Player player;
-  
   Enemy enemy;
 }

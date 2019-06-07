@@ -1,8 +1,4 @@
-
-
-// Declaring object main of class Main
 private Main main;
-
 
 // Define start conditions
 void setup() {
@@ -18,8 +14,6 @@ void setup() {
 
   // Initializing main
   main = new Main(this);
-  
-  lul oskar noob
 }
 
 // Run game

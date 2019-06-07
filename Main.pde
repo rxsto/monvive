@@ -6,20 +6,13 @@ class Main {
 
   ArrayList<Obstacle> obstacles = new ArrayList();
 
-  // Initializing image of exitButton2
-  PImage exitButton = loadImage("exitButton2.png");
-
-  // Initializing image of crosshair2
+  // Initialize images
+  PImage exit = loadImage("exit2.png");
   PImage cursor = loadImage("crosshair4.png");
-
-  // Initializing image of obstacleImg1
-  PImage obstacle1Img = loadImage("obstacle.png");
-
   PImage player = loadImage("player_base.png");
 
+  // Get random number of obstacles
   int numberObstacles = round(random(5, 10));
-
-  //Initializing image of obstacle1
 
   Main(Schulprojekt instance) {  
     soundTrack = new SoundFile(instance, "soundTrack.wav");
@@ -27,8 +20,6 @@ class Main {
 
     for (int i = 0; i < numberObstacles; i++) {
       Obstacle obstacle = new Obstacle();
-
-      // PImage obstacle = loadImage("obstacle.png");
       obstacle.positionX = random(width/2 - 600, width/2 + 600);
       obstacle.positionY = random(height/2 - 320, height/2 + 320);
 
@@ -37,7 +28,6 @@ class Main {
         obstacle.positionY = random(height/2 - 320, height/2 + 320);
       }
 
-      // Set position of obstacle1
       image(obstacle.image, obstacle.positionX, obstacle.positionY);
       obstacles.add(obstacle);
     }
@@ -45,7 +35,6 @@ class Main {
 
   // Permanent method
   void update() {
-
 
     // Set background to black
     background(0, 0, 0);
@@ -62,7 +51,7 @@ class Main {
     rect(width/2, height/2, 1280, 720);
 
     // Set position of exit button
-    image(exitButton, width - exitButton.width + 16, 48);
+    image(exit, width - exit.width + 16, 48);
 
     // Set position of player
     image(player, width/2, height/2);
@@ -73,9 +62,9 @@ class Main {
       image(obstacle.image, obstacle.positionX, obstacle.positionY);
     }
 
-    // when exitButton is pressed close application
+    // when exit is pressed close application
     if (mousePressed) {
-      if (mouseX < width - exitButton.width/4 && mouseX > width - exitButton.width - 16 && mouseY < exitButton.height + 16 && mouseY > exitButton.height - 48)
+      if (mouseX < width - exit.width/4 && mouseX > width - exit.width - 16 && mouseY < exit.height + 16 && mouseY > exit.height - 48)
       {
         exit();
       }
