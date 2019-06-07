@@ -18,6 +18,8 @@ void setup() {
 
   // Initializing main
   main = new Main(this);
+  
+  lul oskar noob
 }
 
 // Run game
