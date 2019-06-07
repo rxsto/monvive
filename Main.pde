@@ -6,10 +6,11 @@ class Main {
 
   ArrayList<Obstacle> obstacles = new ArrayList();
 
+  Player player;
+
   // Initialize images
   PImage exitButton = loadImage("exitButton2.png");
   PImage cursor = loadImage("crosshair4.png");
-  PImage player = loadImage("player_base.png");
 
   // Get random number of obstacles
   int numberObstacles = round(random(5, 10));
@@ -20,16 +21,24 @@ class Main {
 
     for (int i = 0; i < numberObstacles; i++) {
       Obstacle obstacle = new Obstacle();
-      obstacle.positionX = random(width/2 - 600, width/2 + 600);
-      obstacle.positionY = random(height/2 - 320, height/2 + 320);
+      obstacle.positionX = random(width/2 - 576, width/2 + 576);
+      obstacle.positionY = random(height/2 - 296, height/2 + 296);      
 
       while (!collision(obstacle)) {
-        obstacle.positionX = random(width/2 - 600, width/2 + 600);
-        obstacle.positionY = random(height/2 - 320, height/2 + 320);
+        obstacle.positionX = random(width/2 - 576, width/2 + 576);
+        obstacle.positionY = random(height/2 - 296, height/2 + 296);
       }
 
-      image(obstacle.image, obstacle.positionX, obstacle.positionY);
       obstacles.add(obstacle);
+    }
+    
+    player = new Player();
+    player.positionX = random(width/2 - 576, width/2 + 576);
+    player.positionY = random(height/2 - 296, height/2 + 296);      
+
+    while (!collision(player)) {
+      player.positionX = random(width/2 - 576, width/2 + 576);
+      player.positionY = random(height/2 - 296, height/2 + 296);
     }
   }
 
@@ -37,51 +46,72 @@ class Main {
   void update() {
 
     // Set background to black
-    background(0, 0, 0);
+    background(66, 66, 66);
 
     // Creates a crosshair as a cursor
-    cursor(cursor);
+    //cursor(cursor); // TODO: FIX INVALID HOTSPOT
 
-    // Set bar on top to chocolate brown 5
-    fill(139, 69, 19);
+    // Set bar on top to grey
+    fill(97, 97, 97);
     rect(width/2, 48, width, 96);
+    
+    textSize(64);
+    fill(238, 238, 238);
+    text("Monvive", 24, 72);
 
-    // Set playground to white
-    fill(255, 255, 255);
-    rect(width/2, height/2, 1280, 720);
+    // Set playground to light grey
+    fill(238, 238, 238);
+    rect(width/2, height/2, 1280, 720, 8);
 
     // Set position of exitButton button
     image(exitButton, width - exitButton.width + 16, 48);
-
-    // Set position of player
-    image(player, width/2, height/2);
 
     // Set position of obstacles
     for (int i = 0; i < numberObstacles; i++) {
       Obstacle obstacle = obstacles.get(i);
       image(obstacle.image, obstacle.positionX, obstacle.positionY);
     }
+    
+    image(player.image, player.positionX, player.positionY);
 
-    // when exitButton is pressed close application
+    // Execute on mousePressed
     if (mousePressed) {
-      if (mouseX < width - exitButton.width/4 && mouseX > width - exitButton.width - 16 && mouseY < exitButton.height + 16 && mouseY > exitButton.height - 48)
-      {
+      // When exitButton is pressed close application
+      if (mouseX < width - exitButton.width/4 && mouseX > width - exitButton.width - 16 && mouseY < exitButton.height + 16 && mouseY > exitButton.height - 48) {
         exit();
+      }
+    }
+    
+    // Execute on keyPressed
+    if (keyPressed) {
+      // Executed when special keys are pressed (up, down etc)
+      if (key == CODED) {
+        // TODO: IMPLEMENT COLLISION
+        switch(keyCode) {
+          case UP:             
+            this.player.positionY = this.player.positionY - this.player.speed;
+            break;
+          case DOWN:
+            this.player.positionY = this.player.positionY + this.player.speed;
+            break;
+          case LEFT:
+            this.player.positionX = this.player.positionX - this.player.speed;
+            break;
+          case RIGHT:
+            this.player.positionX = this.player.positionX + this.player.speed;
+            break;
+        }
       }
     }
   }
 
-  boolean collision(Display object) {
+  boolean collision(Display d) {
     boolean collided = false;
-
-    // Check if object hits wall
-    if (width/2 - 640 > object.positionX - object.sizeX || width/2 + 640 < object.positionX + object.sizeX || height/2 - 360 > object.positionY - object.sizeY || height/2 + 360 < object.positionY + object.sizeY) {
-      collided = true;
-    }
 
     // Check if object hits obstacles
     for (int i = 0; i < obstacles.size(); i++) {
-      if (obstacles.get(i).positionX - obstacles.get(i).sizeX < object.positionX + object.sizeX && obstacles.get(i).positionX + obstacles.get(i).sizeX > object.positionX - object.sizeX && obstacles.get(i).positionY - object.sizeY < object.positionY + object.sizeY && obstacles.get(i).positionY + obstacles.get(i).sizeY > object.positionY - object.sizeY) {
+      Obstacle o = obstacles.get(i);
+      if (d.getTopEdge() <= o.getBottomEdge() && d.getBottomEdge() >= o.getTopEdge() && d.getRightEdge() >= o.getLeftEdge() && d.getLeftEdge() <= o.getRightEdge()) {
         collided = true;
       }
     }
