@@ -75,13 +75,13 @@ class Main {
     boolean collided = false;
 
     // Check if object hits wall
-    if (width/2 - 640 > object.positionX - object.sizeX || width/2 + 640 < object.positionX + object.sizeX || height/2 - 360 > object.positionX - object.sizeY || height/2 + 360 < object.positionY + object.sizeY) {
+    if (width/2 - 640 > object.positionX - object.sizeX || width/2 + 640 < object.positionX + object.sizeX || height/2 - 360 > object.positionY - object.sizeY || height/2 + 360 < object.positionY + object.sizeY) {
       collided = true;
     }
 
     // Check if object hits obstacles
     for (int i = 0; i < obstacles.size(); i++) {
-      if (obstacles.get(i).positionX - obstacles.get(i).sizeX < object.positionX + object.sizeX && obstacles.get(i).positionX + obstacles.get(i).sizeX > object.positionX - object.sizeX && obstacles.get(i).positionY - object.sizeY < object.positionY + object.sizeY && obstacles.get(i).positionY + obstacles.get(i).sizeY < object.positionY - object.sizeY) {
+      if (obstacles.get(i).positionX - obstacles.get(i).sizeX < object.positionX + object.sizeX && obstacles.get(i).positionX + obstacles.get(i).sizeX > object.positionX - object.sizeX && obstacles.get(i).positionY - object.sizeY < object.positionY + object.sizeY && obstacles.get(i).positionY + obstacles.get(i).sizeY > object.positionY - object.sizeY) {
         collided = true;
       }
     }
