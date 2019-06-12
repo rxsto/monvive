@@ -13,7 +13,17 @@ class Main {
   PImage cursor = loadImage("crosshair4.png");
 
   // Get random number of obstacles
-  int numberObstacles = round(random(5, 10));
+  int numberObstacles = round(random(15, 30));
+
+  boolean playerCollidedTop;
+
+  boolean playerCollidedBottom;
+
+  boolean playerCollidedRight;
+
+  boolean playerCollidedLeft;
+
+  Obstacle collisionObstacle = new Obstacle();
 
   Main(Schulprojekt instance) {  
     soundTrack = new SoundFile(instance, "soundTrack.wav");
@@ -31,7 +41,7 @@ class Main {
 
       obstacles.add(obstacle);
     }
-    
+
     player = new Player();
     player.positionX = random(width/2 - 576, width/2 + 576);
     player.positionY = random(height/2 - 296, height/2 + 296);      
@@ -54,7 +64,7 @@ class Main {
     // Set bar on top to grey
     fill(97, 97, 97);
     rect(width/2, 48, width, 96);
-    
+
     textSize(64);
     fill(238, 238, 238);
     text("Monvive", 24, 72);
@@ -71,7 +81,7 @@ class Main {
       Obstacle obstacle = obstacles.get(i);
       image(obstacle.image, obstacle.positionX, obstacle.positionY);
     }
-    
+
     image(player.image, player.positionX, player.positionY);
 
     // Execute on mousePressed
@@ -81,25 +91,38 @@ class Main {
         exit();
       }
     }
-    
+
+    movementCollision(player);
+
+    println(playerCollidedTop);
+
     // Execute on keyPressed
     if (keyPressed) {
       // Executed when special keys are pressed (up, down etc)
       if (key == CODED) {
         // TODO: IMPLEMENT COLLISION
         switch(keyCode) {
-          case UP:             
+        case UP:     
+          if (playerCollidedTop == false) {
             this.player.positionY = this.player.positionY - this.player.speed;
-            break;
-          case DOWN:
+          }
+          playerCollidedBottom = false;
+          break;
+        case DOWN:
+          if (playerCollidedBottom == false) {
             this.player.positionY = this.player.positionY + this.player.speed;
-            break;
-          case LEFT:
+          }
+          break;
+        case LEFT:
+          if (playerCollidedLeft == false) {
             this.player.positionX = this.player.positionX - this.player.speed;
-            break;
-          case RIGHT:
+          }
+          break;
+        case RIGHT:
+          if (playerCollidedRight == false) {
             this.player.positionX = this.player.positionX + this.player.speed;
-            break;
+          }
+          break;
         }
       }
     }
@@ -113,9 +136,67 @@ class Main {
       Obstacle o = obstacles.get(i);
       if (d.getTopEdge() <= o.getBottomEdge() && d.getBottomEdge() >= o.getTopEdge() && d.getRightEdge() >= o.getLeftEdge() && d.getLeftEdge() <= o.getRightEdge()) {
         collided = true;
+
+        collisionObstacle = o;
       }
     }
 
     return !collided;
+  }
+
+  void movementCollision(Display d) {  
+    if (getCollidedObstacle(d) != null) {
+      Obstacle o = getCollidedObstacle(d);
+      collisionObstacle = getCollidedObstacle(d);
+      if (d.positionY < o.positionY - 55 && d.positionY > o.positionY - 60) {
+        playerCollidedBottom = true;
+        playerCollidedTop = false;
+        playerCollidedRight = false;
+        playerCollidedLeft = false;
+      }
+      if (d.positionY > o.positionY + 55 && d.positionY < o.positionY + 60) {
+        playerCollidedBottom = false;
+        playerCollidedTop = true;
+        playerCollidedRight = false;
+        playerCollidedLeft = false;
+      }
+      if (d.positionX < o.positionX - 35 && d.positionX > o.positionX - 40) {
+        playerCollidedBottom = false;
+        playerCollidedTop = false;
+        playerCollidedRight = true;
+        playerCollidedLeft = false;
+      }
+      if (d.positionX > o.positionX + 35 && d.positionX < o.positionX + 40) {
+        playerCollidedBottom = false;
+        playerCollidedTop = false;
+        playerCollidedRight = false;
+        playerCollidedLeft = true;
+      }
+    } else {
+      playerCollidedTop = false;
+
+      playerCollidedBottom = false;
+
+      playerCollidedRight = false;
+
+      playerCollidedLeft = false;
+    }
+
+    if (d.positionX < collisionObstacle.positionX - 40 || d.positionX > collisionObstacle.positionX + 40) {
+      playerCollidedTop = false;
+      playerCollidedBottom = false;
+    }
+    if (d.positionY < collisionObstacle.positionY - 60 || d.positionY > collisionObstacle.positionY + 60) {
+      playerCollidedRight = false;
+      playerCollidedLeft =false;
+    }
+  }
+
+  Obstacle getCollidedObstacle(Display d) {
+    if (!collision(d)) {
+      return collisionObstacle;
+    } else {
+      return null;
+    }
   }
 }
