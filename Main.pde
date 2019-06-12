@@ -93,6 +93,7 @@ class Main {
             break;
           case DOWN:
             this.player.positionY = this.player.positionY + this.player.speed;
+<<<<<<< Updated upstream
             break;
           case LEFT:
             this.player.positionX = this.player.positionX - this.player.speed;
@@ -100,6 +101,23 @@ class Main {
           case RIGHT:
             this.player.positionX = this.player.positionX + this.player.speed;
             break;
+=======
+          }
+          playerCollidedTop = false;
+          break;
+        case LEFT:
+          if (playerCollidedLeft == false) {
+            this.player.positionX = this.player.positionX - this.player.speed;
+          }
+          playerCollidedRight = false;
+          break;
+        case RIGHT:
+          if (playerCollidedRight == false) {
+            this.player.positionX = this.player.positionX + this.player.speed;
+          }
+          playerCollidedLeft = false;
+          break;
+>>>>>>> Stashed changes
         }
       }
     }
@@ -118,4 +136,63 @@ class Main {
 
     return !collided;
   }
+<<<<<<< Updated upstream
+=======
+
+  void movementCollision(Display d) {  
+    if (getCollidedObstacle(d) != null) {
+      Obstacle o = getCollidedObstacle(d);
+      collisionObstacle = getCollidedObstacle(d);
+      if (d.positionY < o.positionY - 50 && d.positionY > o.positionY - 55) {
+        playerCollidedBottom = true;
+        playerCollidedTop = false;
+        playerCollidedRight = false;
+        playerCollidedLeft = false;
+      }
+      if (d.positionY > o.positionY + 50 && d.positionY < o.positionY + 55) {
+        playerCollidedBottom = false;
+        playerCollidedTop = true;
+        playerCollidedRight = false;
+        playerCollidedLeft = false;
+      }
+      if (d.positionX < o.positionX - 35 && d.positionX > o.positionX - 40) {
+        playerCollidedBottom = false;
+        playerCollidedTop = false;
+        playerCollidedRight = true;
+        playerCollidedLeft = false;
+      }
+      if (d.positionX > o.positionX + 35 && d.positionX < o.positionX + 40) {
+        playerCollidedBottom = false;
+        playerCollidedTop = false;
+        playerCollidedRight = false;
+        playerCollidedLeft = true;
+      }
+    } else {
+      playerCollidedTop = false;
+
+      playerCollidedBottom = false;
+
+      playerCollidedRight = false;
+
+      playerCollidedLeft = false;
+    }
+
+    if (d.positionX < collisionObstacle.positionX - 40 || d.positionX > collisionObstacle.positionX + 40) {
+      playerCollidedTop = false;
+      playerCollidedBottom = false;
+    }
+    if (d.positionY < collisionObstacle.positionY - 60 || d.positionY > collisionObstacle.positionY + 60) {
+      playerCollidedRight = false;
+      playerCollidedLeft = false;
+    }
+  }
+
+  Obstacle getCollidedObstacle(Display d) {
+    if (!collision(d)) {
+      return collisionObstacle;
+    } else {
+      return null;
+    }
+  }
+>>>>>>> Stashed changes
 }
