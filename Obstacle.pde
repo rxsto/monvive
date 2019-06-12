@@ -5,9 +5,6 @@ class Obstacle extends Display {
   
   Obstacle() {  
     this.sizeX = image.width;
-    this.sizeY = image.height;  
-    
-    positionX = 5000;
-    positionY = 5000;
+    this.sizeY = image.height;    
   }
 }
