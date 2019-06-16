@@ -13,7 +13,17 @@ class Main {
   PImage cursor = loadImage("crosshair4.png");
 
   // Get random number of obstacles
-  int numberObstacles = round(random(5, 10));
+  int numberObstacles = round(random(15, 30));
+
+  boolean playerCollidedTop;
+
+  boolean playerCollidedBottom;
+
+  boolean playerCollidedRight;
+
+  boolean playerCollidedLeft;
+
+  Obstacle collisionObstacle = new Obstacle();
 
   Main(Schulprojekt instance) {  
     soundTrack = new SoundFile(instance, "soundTrack.wav");
@@ -81,6 +91,10 @@ class Main {
         exit();
       }
     }
+
+    movementCollision(player);
+
+    println(playerCollidedTop);
     
     // Execute on keyPressed
     if (keyPressed) {
@@ -88,36 +102,27 @@ class Main {
       if (key == CODED) {
         // TODO: IMPLEMENT COLLISION
         switch(keyCode) {
-          case UP:             
+        case UP:     
+          if (playerCollidedTop == false) {
             this.player.positionY = this.player.positionY - this.player.speed;
-            break;
-          case DOWN:
-            this.player.positionY = this.player.positionY + this.player.speed;
-<<<<<<< Updated upstream
-            break;
-          case LEFT:
-            this.player.positionX = this.player.positionX - this.player.speed;
-            break;
-          case RIGHT:
-            this.player.positionX = this.player.positionX + this.player.speed;
-            break;
-=======
           }
-          playerCollidedTop = false;
+          playerCollidedBottom = false;
+          break;
+        case DOWN:
+          if (playerCollidedBottom == false) {
+            this.player.positionY = this.player.positionY + this.player.speed;
+          }
           break;
         case LEFT:
           if (playerCollidedLeft == false) {
             this.player.positionX = this.player.positionX - this.player.speed;
           }
-          playerCollidedRight = false;
           break;
         case RIGHT:
           if (playerCollidedRight == false) {
             this.player.positionX = this.player.positionX + this.player.speed;
           }
-          playerCollidedLeft = false;
           break;
->>>>>>> Stashed changes
         }
       }
     }
@@ -131,25 +136,25 @@ class Main {
       Obstacle o = obstacles.get(i);
       if (d.getTopEdge() <= o.getBottomEdge() && d.getBottomEdge() >= o.getTopEdge() && d.getRightEdge() >= o.getLeftEdge() && d.getLeftEdge() <= o.getRightEdge()) {
         collided = true;
+
+        collisionObstacle = o;
       }
     }
 
     return !collided;
   }
-<<<<<<< Updated upstream
-=======
 
   void movementCollision(Display d) {  
     if (getCollidedObstacle(d) != null) {
       Obstacle o = getCollidedObstacle(d);
       collisionObstacle = getCollidedObstacle(d);
-      if (d.positionY < o.positionY - 50 && d.positionY > o.positionY - 55) {
+      if (d.positionY < o.positionY - 55 && d.positionY > o.positionY - 60) {
         playerCollidedBottom = true;
         playerCollidedTop = false;
         playerCollidedRight = false;
         playerCollidedLeft = false;
       }
-      if (d.positionY > o.positionY + 50 && d.positionY < o.positionY + 55) {
+      if (d.positionY > o.positionY + 55 && d.positionY < o.positionY + 60) {
         playerCollidedBottom = false;
         playerCollidedTop = true;
         playerCollidedRight = false;
@@ -183,7 +188,7 @@ class Main {
     }
     if (d.positionY < collisionObstacle.positionY - 60 || d.positionY > collisionObstacle.positionY + 60) {
       playerCollidedRight = false;
-      playerCollidedLeft = false;
+      playerCollidedLeft =false;
     }
   }
 
@@ -194,5 +199,4 @@ class Main {
       return null;
     }
   }
->>>>>>> Stashed changes
 }
