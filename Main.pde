@@ -147,6 +147,21 @@ class Main {
 
     return !collided;
   }
+  
+  boolean collisionMovement(Display d) {
+    boolean collided = false;
+
+    // Check if object hits obstacles
+    for (int i = 0; i < obstacles.size(); i++) {
+      Obstacle o = obstacles.get(i);
+      if (d.getTopEdge() <= o.getBottomEdge() && d.getBottomEdge() >= o.getTopEdge() && d.getRightEdge() >= o.getLeftEdge() && d.getLeftEdge() <= o.getRightEdge()) {
+        collided = true;
+
+        collisionObstacle = o;
+      }
+    }
+    return !collided;
+  }
 
   void movementCollision(Display d) {  
     if (getCollidedObstacle(d) != null) {
@@ -197,7 +212,7 @@ class Main {
   }
 
   Obstacle getCollidedObstacle(Display d) {
-    if (!collision(d)) {
+    if (!collisionMovement(d)) {
       return collisionObstacle;
     } else {
       return null;
