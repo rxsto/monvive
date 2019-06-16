@@ -13,7 +13,7 @@ class Main {
   PImage cursor = loadImage("crosshair4.png");
 
   // Get random number of obstacles
-  int numberObstacles = round(random(15, 30));
+  int numberObstacles = round(random(5, 10));
 
   boolean playerCollidedTop;
 
@@ -105,22 +105,26 @@ class Main {
         case UP:     
           if (playerCollidedTop == false) {
             this.player.positionY = this.player.positionY - this.player.speed;
+            playerCollidedBottom = false;
           }
-          playerCollidedBottom = false;
+          
           break;
         case DOWN:
           if (playerCollidedBottom == false) {
             this.player.positionY = this.player.positionY + this.player.speed;
+            playerCollidedTop = false;
           }
           break;
         case LEFT:
           if (playerCollidedLeft == false) {
             this.player.positionX = this.player.positionX - this.player.speed;
+            playerCollidedRight = false;
           }
           break;
         case RIGHT:
           if (playerCollidedRight == false) {
             this.player.positionX = this.player.positionX + this.player.speed;
+            playerCollidedLeft = false;
           }
           break;
         }
@@ -134,7 +138,7 @@ class Main {
     // Check if object hits obstacles
     for (int i = 0; i < obstacles.size(); i++) {
       Obstacle o = obstacles.get(i);
-      if (d.getTopEdge() <= o.getBottomEdge() && d.getBottomEdge() >= o.getTopEdge() && d.getRightEdge() >= o.getLeftEdge() && d.getLeftEdge() <= o.getRightEdge()) {
+      if (d.getTopEdge() <= o.getBottomEdge() + 100 && d.getBottomEdge() >= o.getTopEdge() - 100 && d.getRightEdge() >= o.getLeftEdge() - 100 && d.getLeftEdge() <= o.getRightEdge() + 100) {
         collided = true;
 
         collisionObstacle = o;
