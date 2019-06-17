@@ -93,8 +93,6 @@ class Main {
     }
 
     movementCollision(player);
-
-    println(playerCollidedTop);
     
     // Execute on keyPressed
     if (keyPressed) {
