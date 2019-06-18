@@ -7,6 +7,6 @@ class Player extends Entity {
   Player() {
     this.sizeX = image.width;
     this.sizeY = image.height;
-    this.speed = 2;
+    
   }
 }

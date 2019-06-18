@@ -5,12 +5,15 @@ class Main {
   SoundFile soundTrack;
 
   ArrayList<Obstacle> obstacles = new ArrayList();
+  
+  ArrayList<Enemy> enemys = new ArrayList();
 
   Player player;
 
   // Initialize images
   PImage exitButton = loadImage("exitButton2.png");
   PImage cursor = loadImage("crosshair4.png");
+  PImage healthbar = loadImage("healthBarFull.png");
 
   // Get random number of obstacles
   int numberObstacles = round(random(5, 10));
@@ -22,6 +25,7 @@ class Main {
   boolean playerCollidedRight;
 
   boolean playerCollidedLeft;
+ 
 
   Obstacle collisionObstacle = new Obstacle();
 
@@ -68,6 +72,7 @@ class Main {
     textSize(64);
     fill(238, 238, 238);
     text("Monvive", 24, 72);
+    text("Kills: ", 500, 72); 
 
     // Set playground to light grey
     fill(238, 238, 238);
@@ -82,6 +87,7 @@ class Main {
       image(obstacle.image, obstacle.positionX, obstacle.positionY);
     }
     
+    image(healthbar, player.positionX, player.positionY - 45);
     image(player.image, player.positionX, player.positionY);
 
     // Execute on mousePressed

@@ -1,5 +1,9 @@
-abstract class Enemy extends Display {
+abstract class Enemy extends Entity {
 
   int hitDamage;
   Weapon weapon;
+
+  Enemy() {
+    super();
+  }
 }
