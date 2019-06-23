@@ -5,10 +5,10 @@ class Main {
   SoundFile soundTrack;
 
   ArrayList<Obstacle> obstacles = new ArrayList();
-  
-  ArrayList<Enemy> enemys = new ArrayList();
 
   Player player;
+  
+  Wave wave;
 
   // Initialize images
   PImage exitButton = loadImage("exitButton2.png");
