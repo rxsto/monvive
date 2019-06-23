@@ -2,6 +2,9 @@ abstract class Enemy extends Entity {
 
   int hitDamage;
   Weapon weapon;
+  
+  int speedX = 1;
+  int speedY = 1;
 
   int index;
 

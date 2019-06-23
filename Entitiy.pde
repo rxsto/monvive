@@ -1,11 +1,13 @@
 abstract class Entity extends Display {
 
-  int speed;
+  int speedX;
+  int speedY;
   int baseHealth;
   float currentHealth;
   
   Entity() {
-   speed = 2;
+   speedX = 2;
+   speedY = 2;
    baseHealth = 100;
    currentHealth = 100;
   }
