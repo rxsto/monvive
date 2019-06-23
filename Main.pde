@@ -8,7 +8,7 @@ class Main {
 
   Player player;
   
-  Wave wave;
+  Wave wave = new Wave();
 
   // Initialize images
   PImage exitButton = loadImage("exitButton2.png");
@@ -134,6 +134,11 @@ class Main {
         }
       }
     }
+    if(wave.enemyAmount == 0) {
+      wave.spawnEnemys();
+      wave.index++;
+    }
+    wave.showEnemys();
   }
 
   boolean collision(Display d) {
