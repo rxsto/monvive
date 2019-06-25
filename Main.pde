@@ -89,7 +89,9 @@ class Main {
 
     image(healthbar, player.positionX, player.positionY - 45);
     image(player.image, player.positionX, player.positionY);
-    image(player.bullet, player.gun.bulletPositionX, player.gun.bulletPositionY);
+    for(int i = 0; i < player.bullets.size(); i++) {
+    image(player.bullets.get(i).image, player.bullets.get(i).positionX, player.bullets.get(i).positionY);
+    }
     player.shooting();
 
     // Execute on mousePressed
