@@ -35,4 +35,29 @@ class Wave {
       image(enemy.image, enemy.positionX, enemy.positionY);
     }
   }
+  void movementEnemys(Player player) {
+    float x = player.positionX;
+    float y = player.positionY;
+    
+    for(int i = 0;i < enemyAmount; i++) {
+      Enemy enemy = enemys.get(i);
+      if(x < enemy.positionX) {
+        enemy.speedX = abs(enemy.speedX);
+      }
+      if(x > enemy.positionX) {
+        enemy.speedX = -abs(enemy.speedX);
+      }
+      if(y < enemy.positionY) {
+        enemy.speedY = abs(enemy.speedY);
+      }
+      if(y > enemy.positionY) {
+        enemy.speedY = -abs(enemy.speedY);
+      }
+      enemy.positionX = enemy.positionX - enemy.speedX;
+      enemy.positionY = enemy.positionY - enemy.speedY;
+      if(i == enemyAmount) {
+        i = 0;
+      }
+    }
+  }
 }

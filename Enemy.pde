@@ -12,6 +12,10 @@ abstract class Enemy extends Entity {
 
   Enemy() {
     super();
+    
+    speedX = 1;
+    speedY = 1;
+    
     index = round(random(0.5, 3.5));
     if (index == 1) {
       image = loadImage("enemy_base.png");

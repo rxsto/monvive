@@ -7,13 +7,14 @@ class Main {
   ArrayList<Obstacle> obstacles = new ArrayList();
 
   Player player;
-  
+
   Wave wave = new Wave();
 
   // Initialize images
   PImage exitButton = loadImage("exitButton2.png");
   PImage cursor = loadImage("crosshair4.png");
   PImage healthbar = loadImage("healthBarFull.png");
+  PImage background = loadImage("background.png");
 
   // Get random number of obstacles
   int numberObstacles = round(random(5, 10));
@@ -25,7 +26,7 @@ class Main {
   boolean playerCollidedRight;
 
   boolean playerCollidedLeft;
- 
+
 
   Obstacle collisionObstacle = new Obstacle();
 
@@ -45,7 +46,7 @@ class Main {
 
       obstacles.add(obstacle);
     }
-    
+
     player = new Player();
     player.positionX = random(width/2 - 576, width/2 + 576);
     player.positionY = random(height/2 - 296, height/2 + 296);      
@@ -64,19 +65,18 @@ class Main {
 
     // Creates a crosshair as a cursor
     //cursor(cursor); // TODO: FIX INVALID HOTSPOT
-
+    
+    // Set background
+    image(background, width/2, height/2  );
+    
     // Set bar on top to grey
     fill(97, 97, 97);
     rect(width/2, 48, width, 96);
-    
+
     textSize(64);
     fill(238, 238, 238);
     text("Monvive", 24, 72);
     text("Kills: ", 500, 72); 
-
-    // Set playground to light grey
-    fill(238, 238, 238);
-    rect(width/2, height/2, 1280, 720, 8);
 
     // Set position of exitButton button
     image(exitButton, width - exitButton.width + 16, 48);
@@ -86,9 +86,11 @@ class Main {
       Obstacle obstacle = obstacles.get(i);
       image(obstacle.image, obstacle.positionX, obstacle.positionY);
     }
-    
+
     image(healthbar, player.positionX, player.positionY - 45);
     image(player.image, player.positionX, player.positionY);
+    image(player.bullet, player.gun.bulletPositionX, player.gun.bulletPositionY);
+    player.shooting();
 
     // Execute on mousePressed
     if (mousePressed) {
@@ -99,7 +101,9 @@ class Main {
     }
 
     movementCollision(player);
-    
+
+    wave.movementEnemys(player);
+
     // Execute on keyPressed
     if (keyPressed) {
       // Executed when special keys are pressed (up, down etc)
@@ -108,33 +112,33 @@ class Main {
         switch(keyCode) {
         case UP:     
           if (playerCollidedTop == false) {
-            this.player.positionY = this.player.positionY - this.player.speed;
+            this.player.positionY = this.player.positionY - this.player.speedX;
             playerCollidedBottom = false;
           }
-          
+
           break;
         case DOWN:
           if (playerCollidedBottom == false) {
-            this.player.positionY = this.player.positionY + this.player.speed;
+            this.player.positionY = this.player.positionY + this.player.speedX;
             playerCollidedTop = false;
           }
           break;
         case LEFT:
           if (playerCollidedLeft == false) {
-            this.player.positionX = this.player.positionX - this.player.speed;
+            this.player.positionX = this.player.positionX - this.player.speedY;
             playerCollidedRight = false;
           }
           break;
         case RIGHT:
           if (playerCollidedRight == false) {
-            this.player.positionX = this.player.positionX + this.player.speed;
+            this.player.positionX = this.player.positionX + this.player.speedY;
             playerCollidedLeft = false;
           }
           break;
         }
       }
     }
-    if(wave.enemyAmount == 0) {
+    if (wave.enemyAmount == 0) {
       wave.spawnEnemys();
       wave.index++;
     }
@@ -156,7 +160,7 @@ class Main {
 
     return !collided;
   }
-  
+
   boolean collisionMovement(Display d) {
     boolean collided = false;
 
@@ -216,15 +220,27 @@ class Main {
     }
     if (d.positionY < collisionObstacle.positionY - 60 || d.positionY > collisionObstacle.positionY + 60) {
       playerCollidedRight = false;
-      playerCollidedLeft =false;
+      playerCollidedLeft = false;
     }
+    if (d.positionY < height/2 - 328) {
+      playerCollidedTop = true;
+    }
+    if (d.positionY > height/2 + 328) {
+      playerCollidedBottom = true;
+    }
+    if (d.positionX < width/2 - 624){
+      playerCollidedLeft = true;
+    }
+    if (d.positionX > width/2 + 624) {
+      playerCollidedRight = true;
   }
+}
 
-  Obstacle getCollidedObstacle(Display d) {
-    if (!collisionMovement(d)) {
-      return collisionObstacle;
-    } else {
-      return null;
-    }
+Obstacle getCollidedObstacle(Display d) {
+  if (!collisionMovement(d)) {
+    return collisionObstacle;
+  } else {
+    return null;
   }
+}
 }
