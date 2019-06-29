@@ -162,6 +162,19 @@ class Main {
 
     return !collided;
   }
+  
+  boolean collisionBullet(Bullet d) {
+    boolean collided = false;
+
+    // Check if object hits obstacles
+    for (int i = 0; i < obstacles.size(); i++) {
+      Obstacle o = obstacles.get(i);
+      if (d.getTopEdge() <= o.getBottomEdge() + 100 && d.getBottomEdge() >= o.getTopEdge() - 100 && d.getRightEdge() >= o.getLeftEdge() - 100 && d.getLeftEdge() <= o.getRightEdge() + 100) {
+        collided = true;
+      }
+    }
+    return !collided;
+  }
 
   boolean collisionMovement(Display d) {
     boolean collided = false;

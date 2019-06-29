@@ -17,6 +17,7 @@ class Player extends Entity {
 
   void shooting () {
     firerateTimer();
+
     if (firerate == 0.4) {
       if (mousePressed) {
 
@@ -65,8 +66,17 @@ class Player extends Entity {
       }
     }
     for (int i = 0; i < bullets.size(); i++) {
-      bullets.get(i).positionX = bullets.get(i).positionX + bullets.get(i).speedX;
-      bullets.get(i).positionY = bullets.get(i).positionY + bullets.get(i).speedY;
+      Bullet b = bullets.get(i);
+
+      b.sizeX = b.image.width;
+      b.sizeY = b.image.height;
+
+      b.positionX = b.positionX + b.speedX;
+      b.positionY = b.positionY + b.speedY;
+
+        if (b.positionX < width/2 - 670 || b.positionX > width/2 + 670 || b.positionY < height/2 - 390 || b.positionY > height/2 + 390) {
+            bullets.remove(b);
+      }
     }
   }
 

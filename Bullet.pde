@@ -1,4 +1,4 @@
-class Bullet extends Weapon {
+class Bullet extends Display {
   
   PImage image = loadImage("bullet.png");
   
@@ -6,6 +6,8 @@ class Bullet extends Weapon {
   float speedY = 5;
   float positionX = 5000;
   float positionY = 5000;
+  int sizeX = image.width;
+  int sizeY = image.height;
   
   
   
