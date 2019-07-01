@@ -27,6 +27,7 @@ class Wave {
 
       enemys.add(enemy);
     }
+    println("[Main] Spawned " + enemyAmount + " enemies in wave " + index);
   }
 
   void showEnemys() {

@@ -1,6 +1,9 @@
 import processing.sound.*;
+import java.sql.*;
 
 class Main {
+
+  Database database;
 
   SoundFile soundTrack;
 
@@ -17,7 +20,7 @@ class Main {
   PImage background = loadImage("background.png");
 
   // Get random number of obstacles
-  int numberObstacles = round(random(1, 1));
+  int numberObstacles = round(random(5, 12));
 
   boolean playerCollidedTop;
 
@@ -30,9 +33,13 @@ class Main {
 
   Obstacle collisionObstacle = new Obstacle();
 
-  Main(Schulprojekt instance) {  
+  Main(Schulprojekt instance) {     
+    database = new Database(instance, "91.200.102.167", "schule", "schule", "schule");
+    println("[Main] Connected to database");
+    
     soundTrack = new SoundFile(instance, "soundTrack.wav");
     soundTrack.loop();
+    println("[Main] Started playing soundtrack");
 
     for (int i = 0; i < numberObstacles; i++) {
       Obstacle obstacle = new Obstacle();
@@ -46,10 +53,12 @@ class Main {
 
       obstacles.add(obstacle);
     }
+    println("[Main] Spawned " + numberObstacles + " obstacles");
 
     player = new Player();
     player.positionX = random(width/2 - 576, width/2 + 576);
-    player.positionY = random(height/2 - 296, height/2 + 296);      
+    player.positionY = random(height/2 - 296, height/2 + 296); 
+    println("[Main] Spawned player");     
 
     while (!collision(player)) {
       player.positionX = random(width/2 - 576, width/2 + 576);
@@ -106,12 +115,21 @@ class Main {
 
     wave.movementEnemys(player);
 
-
-
     for (int i = 0; i < wave.enemys.size(); i++) {
       if (wave.enemys.get(i).currentHealth <= 0) {
         wave.enemyAmount--;
         wave.enemys.remove(wave.enemys.get(i));
+        database.mysql.query("SELECT * FROM stats");
+        ResultSet result = database.mysql.result;
+        int kills = 0;
+        try {
+          result.next();
+          kills = result.getInt("kills");    
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+        int newKills = kills + 1;
+        database.mysql.execute("UPDATE stats SET kills = " + newKills + " WHERE kills = " + kills);
       }
     }
 
@@ -152,6 +170,17 @@ class Main {
     if (wave.enemyAmount == 0) {
       wave.spawnEnemys();
       wave.index++;
+      database.mysql.query("SELECT * FROM stats");
+      ResultSet result = database.mysql.result;
+      int waves = 0;
+      try {
+        result.next();
+        waves = result.getInt("waves");
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+      int newWaves = waves + 1;
+      database.mysql.execute("UPDATE stats SET waves = " + newWaves + " WHERE waves = " + waves);
     }
     wave.showEnemys();
   }
