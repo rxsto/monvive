@@ -6,7 +6,7 @@ class Player extends Entity {
 
   ArrayList<Bullet> bullets = new ArrayList();
 
-  float firerate = 0.4;
+  float firerate = 0.3;
 
   boolean shooting = false;
 
@@ -18,7 +18,7 @@ class Player extends Entity {
   void shooting () {
     firerateTimer();
 
-    if (firerate == 0.4) {
+    if (firerate == 0.3) {
       if (mousePressed) {
 
         shooting = true;
@@ -27,8 +27,8 @@ class Player extends Entity {
 
         bullets.add(bullet);
 
-        bullet.speedX = 5;
-        bullet.speedY = 5;
+        bullet.speedX = 15;
+        bullet.speedY = 15;
 
         float x = mouseX;
         float y = mouseY;
@@ -74,8 +74,11 @@ class Player extends Entity {
       b.positionX = b.positionX + b.speedX;
       b.positionY = b.positionY + b.speedY;
 
-        if (b.positionX < width/2 - 670 || b.positionX > width/2 + 670 || b.positionY < height/2 - 390 || b.positionY > height/2 + 390) {
-            bullets.remove(b);
+      if (b.positionX < width/2 - 670 || b.positionX > width/2 + 670 || b.positionY < height/2 - 390 || b.positionY > height/2 + 390) {
+        bullets.remove(b);
+      }
+      if (!main.collisionBullet(b)) {
+        bullets.remove(b);
       }
     }
   }
@@ -85,7 +88,7 @@ class Player extends Entity {
       firerate = firerate - 0.0125;
     }
     if (firerate <= 0) {
-      firerate = 0.4;
+      firerate = 0.3;
       shooting = false;
     }
   }

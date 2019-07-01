@@ -17,7 +17,7 @@ class Main {
   PImage background = loadImage("background.png");
 
   // Get random number of obstacles
-  int numberObstacles = round(random(5, 10));
+  int numberObstacles = round(random(1, 1));
 
   boolean playerCollidedTop;
 
@@ -65,10 +65,10 @@ class Main {
 
     // Creates a crosshair as a cursor
     //cursor(cursor); // TODO: FIX INVALID HOTSPOT
-    
+
     // Set background
     image(background, width/2, height/2  );
-    
+
     // Set bar on top to grey
     fill(97, 97, 97);
     rect(width/2, 48, width, 96);
@@ -89,8 +89,8 @@ class Main {
 
     image(healthbar, player.positionX, player.positionY - 45);
     image(player.image, player.positionX, player.positionY);
-    for(int i = 0; i < player.bullets.size(); i++) {
-    image(player.bullets.get(i).image, player.bullets.get(i).positionX, player.bullets.get(i).positionY);
+    for (int i = 0; i < player.bullets.size(); i++) {
+      image(player.bullets.get(i).image, player.bullets.get(i).positionX, player.bullets.get(i).positionY);
     }
     player.shooting();
 
@@ -106,40 +106,49 @@ class Main {
 
     wave.movementEnemys(player);
 
+
+
+    for (int i = 0; i < wave.enemys.size(); i++) {
+      if (wave.enemys.get(i).currentHealth <= 0) {
+        wave.enemyAmount--;
+        wave.enemys.remove(wave.enemys.get(i));
+      }
+    }
+
+    for (int i = 0; i < player.bullets.size(); i++) {
+      collisionBulletEnemy(player.bullets.get(i));
+    }
+
     // Execute on keyPressed
     if (keyPressed) {
-      // Executed when special keys are pressed (up, down etc)
-      if (key == CODED) {
-        // TODO: IMPLEMENT COLLISION
-        switch(keyCode) {
-        case UP:     
-          if (playerCollidedTop == false) {
-            this.player.positionY = this.player.positionY - this.player.speedX;
-            playerCollidedBottom = false;
-          }
+      if (key == 'W' || key == 'w') { 
+        if (playerCollidedTop == false) {
+          this.player.positionY = this.player.positionY - this.player.speedX;
+          playerCollidedBottom = false;
+        }
+      } else 
 
-          break;
-        case DOWN:
-          if (playerCollidedBottom == false) {
-            this.player.positionY = this.player.positionY + this.player.speedX;
-            playerCollidedTop = false;
-          }
-          break;
-        case LEFT:
+      if (key == 'S' || key == 's') {
+        if (playerCollidedBottom == false) {
+          this.player.positionY = this.player.positionY + this.player.speedX;
+          playerCollidedTop = false;
+        }
+      } else
+
+        if (key == 'A' || key == 'a') {
           if (playerCollidedLeft == false) {
             this.player.positionX = this.player.positionX - this.player.speedY;
             playerCollidedRight = false;
           }
-          break;
-        case RIGHT:
-          if (playerCollidedRight == false) {
-            this.player.positionX = this.player.positionX + this.player.speedY;
-            playerCollidedLeft = false;
+        } else
+          if (key == 'D' || key == 'd') {
+            if (playerCollidedRight == false) {
+              this.player.positionX = this.player.positionX + this.player.speedY;
+              playerCollidedLeft = false;
+            }
           }
-          break;
-        }
-      }
     }
+
     if (wave.enemyAmount == 0) {
       wave.spawnEnemys();
       wave.index++;
@@ -162,14 +171,27 @@ class Main {
 
     return !collided;
   }
-  
-  boolean collisionBullet(Bullet d) {
+
+  void collisionBulletEnemy(Bullet d) {
+
+    // Check if object hits obstacles
+    for (int i = 0; i < wave.enemys.size(); i++) {
+      Enemy e = wave.enemys.get(i);
+      if (d.getTopEdge()  <= e.getBottomEdge() && d.getBottomEdge() >= e.getTopEdge() && d.getRightEdge() >= e.getLeftEdge() && d.getLeftEdge() <= e.getRightEdge()) {
+        e.currentHealth = e.currentHealth - d.baseDamage;       
+        player.bullets.remove(d);
+      }
+    }
+  }
+
+  boolean collisionBullet(Display d) {
     boolean collided = false;
 
     // Check if object hits obstacles
     for (int i = 0; i < obstacles.size(); i++) {
       Obstacle o = obstacles.get(i);
-      if (d.getTopEdge() <= o.getBottomEdge() + 100 && d.getBottomEdge() >= o.getTopEdge() - 100 && d.getRightEdge() >= o.getLeftEdge() - 100 && d.getLeftEdge() <= o.getRightEdge() + 100) {
+
+      if (d.getTopEdge() + 50 <= o.getBottomEdge() && d.getBottomEdge() - 50 >= o.getTopEdge() && d.getRightEdge() - 50 >= o.getLeftEdge()  && d.getLeftEdge() + 50 <= o.getRightEdge()) {
         collided = true;
       }
     }
@@ -243,19 +265,19 @@ class Main {
     if (d.positionY > height/2 + 328) {
       playerCollidedBottom = true;
     }
-    if (d.positionX < width/2 - 624){
+    if (d.positionX < width/2 - 624) {
       playerCollidedLeft = true;
     }
     if (d.positionX > width/2 + 624) {
       playerCollidedRight = true;
+    }
   }
-}
 
-Obstacle getCollidedObstacle(Display d) {
-  if (!collisionMovement(d)) {
-    return collisionObstacle;
-  } else {
-    return null;
+  Obstacle getCollidedObstacle(Display d) {
+    if (!collisionMovement(d)) {
+      return collisionObstacle;
+    } else {
+      return null;
+    }
   }
-}
 }

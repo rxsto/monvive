@@ -14,7 +14,7 @@ class Wave {
     int newEnemy = round(random(1, 5)); 
     enemyAmount = newEnemy;
 
-    for (int i = 0; i < newEnemy; i++) {
+    for (int i = 0; i < enemyAmount; i++) {
       Enemy enemy = new Knight();
       enemy = enemy.getEnemy();
       enemy.positionX = random(width/2 - 576, width/2 + 576);
