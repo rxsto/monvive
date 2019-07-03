@@ -1,9 +1,12 @@
 import processing.sound.*;
 import java.sql.*;
+import controlP5.*;
 
 class Main {
 
   Database database;
+
+  ControlP5 cp5;
 
   SoundFile soundTrack;
 
@@ -12,6 +15,8 @@ class Main {
   Player player;
 
   Wave wave = new Wave();
+
+
 
   // Initialize images
   PImage exitButton = loadImage("exitButton2.png");
@@ -30,13 +35,19 @@ class Main {
 
   boolean playerCollidedLeft;
 
+  boolean nameEntered = false;
+  
+  String userName = "";
+
 
   Obstacle collisionObstacle = new Obstacle();
 
   Main(Schulprojekt instance) {     
     database = new Database(instance, "91.200.102.167", "schule", "schule", "schule");
     println("[Main] Connected to database");
-    
+
+    cp5 = new ControlP5(instance);
+
     soundTrack = new SoundFile(instance, "soundTrack.wav");
     soundTrack.loop();
     println("[Main] Started playing soundtrack");
@@ -68,121 +79,140 @@ class Main {
 
   // Permanent method
   void update() {
+    if (nameEntered) {
+      // Set background to black
+      background(66, 66, 66);
 
-    // Set background to black
-    background(66, 66, 66);
+      // Creates a crosshair as a cursor
+      //cursor(cursor); // TODO: FIX INVALID HOTSPOT
 
-    // Creates a crosshair as a cursor
-    //cursor(cursor); // TODO: FIX INVALID HOTSPOT
+      // Set background
+      image(background, width/2, height/2  );
 
-    // Set background
-    image(background, width/2, height/2  );
+      // Set bar on top to grey
+      fill(97, 97, 97);
+      rect(width/2, 48, width, 96);
 
-    // Set bar on top to grey
-    fill(97, 97, 97);
-    rect(width/2, 48, width, 96);
+      textSize(64);
+      fill(238, 238, 238);
+      text("Monvive", 24, 72);
+      text("Kills: ", 500, 72); 
 
-    textSize(64);
-    fill(238, 238, 238);
-    text("Monvive", 24, 72);
-    text("Kills: ", 500, 72); 
+      // Set position of exitButton button
+      image(exitButton, width - exitButton.width + 16, 48);
 
-    // Set position of exitButton button
-    image(exitButton, width - exitButton.width + 16, 48);
-
-    // Set position of obstacles
-    for (int i = 0; i < numberObstacles; i++) {
-      Obstacle obstacle = obstacles.get(i);
-      image(obstacle.image, obstacle.positionX, obstacle.positionY);
-    }
-
-    image(healthbar, player.positionX, player.positionY - 45);
-    image(player.image, player.positionX, player.positionY);
-    for (int i = 0; i < player.bullets.size(); i++) {
-      image(player.bullets.get(i).image, player.bullets.get(i).positionX, player.bullets.get(i).positionY);
-    }
-    player.shooting();
-
-    // Execute on mousePressed
-    if (mousePressed) {
-      // When exitButton is pressed close application
-      if (mouseX < width - exitButton.width/4 && mouseX > width - exitButton.width - 16 && mouseY < exitButton.height + 16 && mouseY > exitButton.height - 48) {
-        exit();
+      // Set position of obstacles
+      for (int i = 0; i < numberObstacles; i++) {
+        Obstacle obstacle = obstacles.get(i);
+        image(obstacle.image, obstacle.positionX, obstacle.positionY);
       }
-    }
 
-    movementCollision(player);
-
-    wave.movementEnemys(player);
-
-    for (int i = 0; i < wave.enemys.size(); i++) {
-      if (wave.enemys.get(i).currentHealth <= 0) {
-        wave.enemyAmount--;
-        wave.enemys.remove(wave.enemys.get(i));
-        database.mysql.query("SELECT * FROM stats");
-        ResultSet result = database.mysql.result;
-        int kills = 0;
-        try {
-          result.next();
-          kills = result.getInt("kills");    
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-        int newKills = kills + 1;
-        database.mysql.execute("UPDATE stats SET kills = " + newKills + " WHERE kills = " + kills);
+      image(healthbar, player.positionX, player.positionY - 45);
+      image(player.image, player.positionX, player.positionY);
+      for (int i = 0; i < player.bullets.size(); i++) {
+        image(player.bullets.get(i).image, player.bullets.get(i).positionX, player.bullets.get(i).positionY);
       }
-    }
+      player.shooting();
 
-    for (int i = 0; i < player.bullets.size(); i++) {
-      collisionBulletEnemy(player.bullets.get(i));
-    }
-
-    // Execute on keyPressed
-    if (keyPressed) {
-      if (key == 'W' || key == 'w') { 
-        if (playerCollidedTop == false) {
-          this.player.positionY = this.player.positionY - this.player.speedX;
-          playerCollidedBottom = false;
+      // Execute on mousePressed
+      if (mousePressed) {
+        // When exitButton is pressed close application
+        if (mouseX < width - exitButton.width/4 && mouseX > width - exitButton.width - 16 && mouseY < exitButton.height + 16 && mouseY > exitButton.height - 48) {
+          exit();
         }
-      } else 
+      }
 
-      if (key == 'S' || key == 's') {
-        if (playerCollidedBottom == false) {
-          this.player.positionY = this.player.positionY + this.player.speedX;
-          playerCollidedTop = false;
+      movementCollision(player);
+
+      wave.movementEnemies(player);
+
+      for (int i = 0; i < wave.enemies.size(); i++) {
+        if (wave.enemies.get(i).currentHealth <= 0) {
+          wave.enemyAmount--;
+          wave.enemies.remove(wave.enemies.get(i));
+          database.mysql.query("SELECT * FROM stats");
+          ResultSet result = database.mysql.result;
+          int kills = 0;
+          try {
+            result.next();
+            kills = result.getInt("kills");
+          } 
+          catch (SQLException e) {
+            e.printStackTrace();
+          }
+          int newKills = kills + 1;
+          database.mysql.execute("UPDATE stats SET kills = " + newKills + " WHERE kills = " + kills);
         }
-      } else
+      }
 
-        if (key == 'A' || key == 'a') {
-          if (playerCollidedLeft == false) {
-            this.player.positionX = this.player.positionX - this.player.speedY;
-            playerCollidedRight = false;
+      for (int i = 0; i < player.bullets.size(); i++) {
+        collisionBulletEnemy(player.bullets.get(i));
+      }
+
+      // Execute on keyPressed
+      if (keyPressed) {
+        if (key == 'W' || key == 'w') { 
+          if (playerCollidedTop == false) {
+            this.player.positionY = this.player.positionY - this.player.speedX;
+            playerCollidedBottom = false;
+          }
+        } else 
+
+        if (key == 'S' || key == 's') {
+          if (playerCollidedBottom == false) {
+            this.player.positionY = this.player.positionY + this.player.speedX;
+            playerCollidedTop = false;
           }
         } else
-          if (key == 'D' || key == 'd') {
-            if (playerCollidedRight == false) {
-              this.player.positionX = this.player.positionX + this.player.speedY;
-              playerCollidedLeft = false;
-            }
-          }
-    }
 
-    if (wave.enemyAmount == 0) {
-      wave.spawnEnemys();
-      wave.index++;
-      database.mysql.query("SELECT * FROM stats");
-      ResultSet result = database.mysql.result;
-      int waves = 0;
-      try {
-        result.next();
-        waves = result.getInt("waves");
-      } catch (SQLException e) {
-        e.printStackTrace();
+          if (key == 'A' || key == 'a') {
+            if (playerCollidedLeft == false) {
+              this.player.positionX = this.player.positionX - this.player.speedY;
+              playerCollidedRight = false;
+            }
+          } else
+            if (key == 'D' || key == 'd') {
+              if (playerCollidedRight == false) {
+                this.player.positionX = this.player.positionX + this.player.speedY;
+                playerCollidedLeft = false;
+              }
+            }
       }
-      int newWaves = waves + 1;
-      database.mysql.execute("UPDATE stats SET waves = " + newWaves + " WHERE waves = " + waves);
+
+      if (wave.enemyAmount == 0) {
+        wave.spawnEnemies();
+        wave.index++;
+        database.mysql.query("SELECT * FROM stats");
+        ResultSet result = database.mysql.result;
+        int waves = 0;
+        try {
+          result.next();
+          waves = result.getInt("waves");
+        } 
+        catch (SQLException e) {
+          e.printStackTrace();
+        }
+        int newWaves = waves + 1;
+        database.mysql.execute("UPDATE stats SET waves = " + newWaves + " WHERE waves = " + waves);
+      }
+      wave.showEnemies();
+    } else {
+      background(255, 155, 0); 
+      text(userName, 50, 50);
+      if (keyPressed) {
+        if (keyCode == ENTER) {
+          nameEntered = true;
+        } else
+        if(keyCode == BACKSPACE) {
+          userName = userName.substring(0, userName.length() - 1);
+        } else {
+          if (keyCode == ENTER) {
+            return;
+          }
+          userName = userName + key;
+        }
+      }
     }
-    wave.showEnemys();
   }
 
   boolean collision(Display d) {
@@ -204,9 +234,9 @@ class Main {
   void collisionBulletEnemy(Bullet d) {
 
     // Check if object hits obstacles
-    for (int i = 0; i < wave.enemys.size(); i++) {
-      Enemy e = wave.enemys.get(i);
-      if (d.getTopEdge()  <= e.getBottomEdge() && d.getBottomEdge() >= e.getTopEdge() && d.getRightEdge() >= e.getLeftEdge() && d.getLeftEdge() <= e.getRightEdge()) {
+    for (int i = 0; i < wave.enemies.size(); i++) {
+      Enemy e = wave.enemies.get(i);
+      if (d.getTopEdge() <= e.getBottomEdge() && d.getBottomEdge() >= e.getTopEdge() && d.getRightEdge() >= e.getLeftEdge() && d.getLeftEdge() <= e.getRightEdge()) {
         e.currentHealth = e.currentHealth - d.baseDamage;       
         player.bullets.remove(d);
       }

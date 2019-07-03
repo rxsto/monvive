@@ -2,7 +2,7 @@ class Wave {
 
   int index;
 
-  ArrayList<Enemy> enemys = new ArrayList();
+  ArrayList<Enemy> enemies = new ArrayList();
 
   int enemyAmount = 0;
 
@@ -10,7 +10,7 @@ class Wave {
     index = 1;
   }
 
-  void spawnEnemys() {
+  void spawnEnemies() {
     int newEnemy = round(random(1, 5)); 
     enemyAmount = newEnemy;
 
@@ -25,23 +25,23 @@ class Wave {
         enemy.positionY = random(height/2 - 296, height/2 + 296);
       }
 
-      enemys.add(enemy);
+      enemies.add(enemy);
     }
     println("[Main] Spawned " + enemyAmount + " enemies in wave " + index);
   }
 
-  void showEnemys() {
+  void showEnemies() {
     for (int i = 0; i < enemyAmount; i++) {
-      Enemy enemy = enemys.get(i);
+      Enemy enemy = enemies.get(i);
       image(enemy.image, enemy.positionX, enemy.positionY);
     }
   }
-  void movementEnemys(Player player) {
+  void movementEnemies(Player player) {
     float x = player.positionX;
     float y = player.positionY;
     
     for(int i = 0;i < enemyAmount; i++) {
-      Enemy enemy = enemys.get(i);
+      Enemy enemy = enemies.get(i);
       if(x < enemy.positionX) {
         enemy.speedX = abs(enemy.speedX);
       }
