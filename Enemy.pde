@@ -2,9 +2,9 @@ abstract class Enemy extends Entity {
 
   int hitDamage;
   Weapon weapon;
-  
-  int speedX = 1;
-  int speedY = 1;
+
+  float speedX = 1;
+  float speedY = 1;
 
   int index;
 
@@ -13,9 +13,13 @@ abstract class Enemy extends Entity {
   Enemy() {
     super();
     
-    speedX = 1;
-    speedY = 1;
+    float newSpeed = random(0.8 + main.wave.index/10, 1.6 + main.wave.index/10);
+
+    speedX = newSpeed;
+    speedY = newSpeed;
+
     
+
     index = round(random(0.5, 3.5));
     if (index == 1) {
       image = loadImage("enemy_base.png");
@@ -28,6 +32,8 @@ abstract class Enemy extends Entity {
         }
       }
     }
+    sizeX = image.width/2;
+    sizeY = image.height/2;
   }
 
   Enemy getEnemy() {

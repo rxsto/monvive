@@ -35,9 +35,11 @@ class Main {
 
   boolean playerCollidedLeft;
 
-  boolean nameEntered = false;
-  
+  boolean nameEntered = true;
+
   String userName = "";
+  
+  boolean run = true;
 
 
   Obstacle collisionObstacle = new Obstacle();
@@ -82,6 +84,25 @@ class Main {
     if (nameEntered) {
       // Set background to black
       background(66, 66, 66);
+      if(player.currentHealth <= 0) {
+        run = false;
+        fill(255, 0, 0);
+        text("RESTART", width/2 - 110, height/2 - 100);
+        rect(width/2, height/2, 50, 50);
+        if(mousePressed) {
+         if(mouseX < width/2 + 25 && mouseX > width/2 - 25 && mouseY < height/2 + 25 && mouseY > height/2 - 25) {
+           player.currentHealth = 100;
+           wave.index = 0;
+           for(int i = 0; i < wave.enemies.size(); i++) {
+             wave.enemies.remove(i);
+           }
+           wave.spawnEnemies();
+           run = true;
+         }
+        }
+      }
+      if(run == true) {
+      
 
       // Creates a crosshair as a cursor
       //cursor(cursor); // TODO: FIX INVALID HOTSPOT
@@ -125,6 +146,8 @@ class Main {
       movementCollision(player);
 
       wave.movementEnemies(player);
+      
+      healthBarUpdate();
 
       for (int i = 0; i < wave.enemies.size(); i++) {
         if (wave.enemies.get(i).currentHealth <= 0) {
@@ -196,21 +219,22 @@ class Main {
         database.mysql.execute("UPDATE stats SET waves = " + newWaves + " WHERE waves = " + waves);
       }
       wave.showEnemies();
-    } else {
+    } 
+    }else {
       background(255, 155, 0); 
       text(userName, 50, 50);
       if (keyPressed) {
         if (keyCode == ENTER) {
           nameEntered = true;
         } else
-        if(keyCode == BACKSPACE) {
-          userName = userName.substring(0, userName.length() - 1);
-        } else {
-          if (keyCode == ENTER) {
-            return;
+          if (keyCode == BACKSPACE) {
+            userName = userName.substring(0, userName.length() - 1);
+          } else {
+            if (keyCode == ENTER) {
+              return;
+            }
+            userName = userName + key;
           }
-          userName = userName + key;
-        }
       }
     }
   }
@@ -338,5 +362,41 @@ class Main {
     } else {
       return null;
     }
+  }
+
+  void healthBarUpdate() {
+    if (player.currentHealth > 90) {
+      healthbar = loadImage("healthBarFull.png");
+    } else
+      if (player.currentHealth > 80 && player.currentHealth < 90) {
+        healthbar = loadImage("healthBar9-10.png");
+      } else 
+      if (player.currentHealth > 70 && player.currentHealth < 80) {
+        healthbar = loadImage("healthBar8-10.png");
+      } else 
+      if (player.currentHealth > 60 && player.currentHealth < 70) {
+        healthbar = loadImage("healthBar7-10.png");
+      } else 
+      if (player.currentHealth > 50 && player.currentHealth < 60) {
+        healthbar = loadImage("healthBar6-10.png");
+      } else 
+      if (player.currentHealth > 40 && player.currentHealth < 50) {
+        healthbar = loadImage("healthBar5-10.png");
+      } else 
+      if (player.currentHealth > 30 && player.currentHealth < 40) {
+        healthbar = loadImage("healthBar4-10.png");
+      } else 
+      if (player.currentHealth > 20 && player.currentHealth < 30) {
+        healthbar = loadImage("healthBar3-10.png");
+      } else 
+      if (player.currentHealth > 10 && player.currentHealth < 20) {
+        healthbar = loadImage("healthBar2-10.png");
+      } else 
+      if (player.currentHealth > 0 && player.currentHealth < 10) {
+        healthbar = loadImage("healthBar1-10.png");
+      } else 
+      if (player.currentHealth <= 0) {
+        healthbar = loadImage("healthBarEmpty.png");
+      }
   }
 }

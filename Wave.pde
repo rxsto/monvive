@@ -11,7 +11,7 @@ class Wave {
   }
 
   void spawnEnemies() {
-    int newEnemy = round(random(1, 5)); 
+    int newEnemy = round(random(1, index)); 
     enemyAmount = newEnemy;
 
     for (int i = 0; i < enemyAmount; i++) {
@@ -40,6 +40,8 @@ class Wave {
     float x = player.positionX;
     float y = player.positionY;
     
+    boolean collision = false;
+    
     for(int i = 0;i < enemyAmount; i++) {
       Enemy enemy = enemies.get(i);
       if(x < enemy.positionX) {
@@ -54,8 +56,16 @@ class Wave {
       if(y > enemy.positionY) {
         enemy.speedY = -abs(enemy.speedY);
       }
+      if(enemy.getTopEdge() + 30 <= main.player.getBottomEdge() && enemy.getBottomEdge() - 30 >= main.player.getTopEdge() && enemy.getRightEdge() - 20 >= main.player.getLeftEdge() && enemy.getLeftEdge() + 20 <= main.player.getRightEdge()) {
+        collision = true;
+      }else
+      collision = false;
+      if(collision == false) {
       enemy.positionX = enemy.positionX - enemy.speedX;
       enemy.positionY = enemy.positionY - enemy.speedY;
+      }else
+      main.player.currentHealth = main.player.currentHealth - 0.33;
+      
       if(i == enemyAmount) {
         i = 0;
       }
