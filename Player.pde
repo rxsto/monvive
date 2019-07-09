@@ -2,7 +2,7 @@ class Player extends Entity {
 
   PImage image = loadImage("player_base.png");
 
-  int kills;
+  int kills = 0;
 
   ArrayList<Bullet> bullets = new ArrayList();
 
